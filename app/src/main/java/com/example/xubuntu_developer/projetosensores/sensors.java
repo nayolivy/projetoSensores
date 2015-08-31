@@ -8,8 +8,15 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.Iterator;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 public class sensors extends ActionBarActivity implements SensorEventListener {
@@ -22,8 +29,19 @@ public class sensors extends ActionBarActivity implements SensorEventListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensors);
 
+        Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new Clicado());
+
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         lastUpdate = System.currentTimeMillis();
+    }
+
+    private class Clicado implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            sortear();
+        }
     }
 
     @Override
@@ -60,21 +78,64 @@ public class sensors extends ActionBarActivity implements SensorEventListener {
         float z = values[2];
 
 
-        TextView textView = (TextView) findViewById(R.id.text_view);
-        textView.setText(x + ", " + y + ", " + z);
+        //TextView textView = (TextView) findViewById(R.id.text_view);
+        //textView.setText(x + ", " + y + ", " + z);
 
         float accelationSquareRoot = (x * x + y * y + z * z)
                 / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
-        long actualTime = event.timestamp;
+        long actualTime = System.currentTimeMillis();
+
         if (accelationSquareRoot >= 2) //
         {
+            //Toast.makeText(this, "O celular foi balançado", Toast.LENGTH_SHORT)
+            //        .show();
+
             if (actualTime - lastUpdate < 200) {
                 return;
             }
             lastUpdate = actualTime;
-            Toast.makeText(this, "o celular foi balançado: " + accelationSquareRoot, Toast.LENGTH_SHORT)
-                    .show();
+
+
+            sortear();
+
+
         }
+    }
+    public void sortear(){
+
+        Random radom  = new Random();
+
+        Set<Integer> numeros = new TreeSet< Integer>();
+
+        while (numeros.size() < 6) {
+            numeros.add(radom.nextInt(60) + 1);
+        }
+
+        Iterator<Integer> it = numeros.iterator();
+
+
+        TextView textView = (TextView) findViewById(R.id.text_view);
+        textView.setText(Integer.toString(it.next()));
+
+
+        TextView textView1= (TextView) findViewById(R.id.textView1);
+        textView1.setText(Integer.toString(it.next()));
+
+
+        TextView textView2= (TextView) findViewById(R.id.textView2);
+        textView2.setText(Integer.toString(it.next()));
+
+
+        TextView textView3= (TextView) findViewById(R.id.textView3);
+        textView3.setText(Integer.toString(it.next()));
+
+
+        TextView textView4= (TextView) findViewById(R.id.textView4);
+        textView4.setText(Integer.toString(it.next()));
+
+
+
+
     }
 
     @Override
